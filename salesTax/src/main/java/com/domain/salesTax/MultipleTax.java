@@ -1,4 +1,4 @@
-package com.pkt.pack1;
+package com.domain.salesTax;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Created by pankaj on 26-11-2015.
  */
-public class TaxImpl implements Tax {
+public class MultipleTax implements Tax {
 
     private Set<Tax> taxes = new HashSet<Tax>();
 

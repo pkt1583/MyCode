@@ -1,4 +1,6 @@
-package com.pkt.pack1;
+package com.service.product;
+
+import com.domain.product.Product;
 
 import java.util.List;
 

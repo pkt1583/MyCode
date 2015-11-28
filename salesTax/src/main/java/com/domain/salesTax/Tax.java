@@ -1,4 +1,4 @@
-package com.pkt.pack1;
+package com.domain.salesTax;
 
 import java.math.BigDecimal;
 

@@ -1,4 +1,4 @@
-package com.pkt.pack1;
+package com.domain.salesTax;
 
 import java.math.BigDecimal;
 
@@ -7,7 +7,7 @@ import java.math.BigDecimal;
  */
 public class BasicSalesTax implements Tax {
 
-    private static final BigDecimal Ten=BigDecimal.TEN;
+    private static final BigDecimal Ten = BigDecimal.TEN;
 
 
     public BigDecimal getTaxValue() {

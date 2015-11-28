@@ -1,8 +1,8 @@
-package com.pkt.pack1;
+package com.service.product;
 
 /**
  * Created by pankaj on 26-11-2015.
  */
-public interface ProductParser<T,U> {
+public interface ProductParser<T, U> {
     U parse(T productDesc);
 }
