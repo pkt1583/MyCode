@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+
 /**
  * Created by pankaj on 29-11-2015.
  */
@@ -28,8 +30,7 @@ public class IntegrationTest {
             }
         }
         fileInput.close();
-
-        System.out.println(salesTax);
+assertEquals(1.50,salesTax);
     }
 
     @Test
@@ -46,7 +47,23 @@ public class IntegrationTest {
             }
         }
         fileInput.close();
+        assertEquals(7.65,salesTax);
+    }
 
-        System.out.println(salesTax);
+    @Test
+    public void testIntegration3() throws URISyntaxException, IOException {
+        FileInput fileInput = new FileInput("classpath:testCase2.txt");
+        fileInput.openReader();
+        double salesTax=0.0;
+        while (fileInput.hasNext()){
+            ProductParser<String, List< Product >> productParser=new StringProductParserImpl();
+            List<Product> products=productParser.parse(fileInput.next());
+            for(Product product:products){
+                salesTax=salesTax+product.calculateTax();
+                System.out.println("sales tax "+salesTax+" calculated for product "+product);
+            }
+        }
+        fileInput.close();
+        assertEquals(6.70,salesTax);
     }
 }
