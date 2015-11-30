@@ -1,10 +1,13 @@
 package com.interfaces.input.file;
 
+import com.exception.input.file.MissingFileException;
 import com.interfaces.input.InputReader;
+import com.interfaces.input.file.pathResolvers.PathResolverFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -32,7 +35,7 @@ public class FileInput implements InputReader<String, String> {
     public void openReader() throws URISyntaxException, IOException {
 
         if (path != null && Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
-            reader = Files.newBufferedReader(path);
+            reader = Files.newBufferedReader(path, Charset.defaultCharset());
         } else {
             StringBuilder sb = new StringBuilder();
             sb.append("File is missing at ");
@@ -79,5 +82,10 @@ public class FileInput implements InputReader<String, String> {
         } else {
             throw new RuntimeException("Already exhausted reading entire file. Please remember to check for hasNext before calling next");
         }
+    }
+
+    @Override
+    public void remove() {
+
     }
 }

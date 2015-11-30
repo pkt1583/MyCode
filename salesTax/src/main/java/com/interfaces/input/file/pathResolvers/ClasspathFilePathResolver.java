@@ -1,6 +1,6 @@
 package com.interfaces.input.file.pathResolvers;
 
-import com.interfaces.input.file.IncorrectFilePathException;
+import com.exception.input.file.IncorrectFilePathException;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -21,6 +21,10 @@ public class ClasspathFilePathResolver implements PathResolver<Path, String> {
         }
         ClassLoader classLoader = this.getClass().getClassLoader();
         URL url = classLoader.getResource(remainingPath);
-        return Paths.get(url.toURI());
+        if (url != null) {
+            return Paths.get(url.toURI());
+        } else {
+            throw new IncorrectFilePathException("File not found at " + filePath);
+        }
     }
 }

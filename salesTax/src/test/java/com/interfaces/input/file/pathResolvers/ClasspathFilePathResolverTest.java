@@ -1,6 +1,6 @@
 package com.interfaces.input.file.pathResolvers;
 
-import com.interfaces.input.file.IncorrectFilePathException;
+import com.exception.input.file.IncorrectFilePathException;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

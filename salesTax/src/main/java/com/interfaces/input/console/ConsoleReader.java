@@ -1,12 +1,14 @@
-package com.interfaces.input;
+package com.interfaces.input.console;
+
+import com.interfaces.input.InputReader;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
- * Created by pankaj on 30-11-2015.
+ * TODO: Implement this.
  */
-public class console implements InputReader<String,String> {
+public class ConsoleReader implements InputReader<String, String> {
     @Override
     public void openReader() throws URISyntaxException, IOException {
 
@@ -25,5 +27,10 @@ public class console implements InputReader<String,String> {
     @Override
     public String next() {
         return null;
+    }
+
+    @Override
+    public void remove() {
+
     }
 }

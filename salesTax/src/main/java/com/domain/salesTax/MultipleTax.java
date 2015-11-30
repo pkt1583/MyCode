@@ -4,9 +4,6 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by pankaj on 26-11-2015.
- */
 public class MultipleTax implements Tax {
 
     private Set<Tax> taxes = new HashSet<Tax>();
@@ -14,7 +11,7 @@ public class MultipleTax implements Tax {
     public BigDecimal getTaxValue() {
         BigDecimal defaultTaxPercetage = BigDecimal.ZERO;
         for (Tax tax : taxes) {
-            defaultTaxPercetage.add(tax.getTaxValue());
+            defaultTaxPercetage = defaultTaxPercetage.add(tax.getTaxValue());
         }
         return defaultTaxPercetage;
     }

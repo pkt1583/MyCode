@@ -1,53 +1,68 @@
 package com.domain.product;
 
 import com.domain.salesTax.Tax;
-import com.domain.tax.DefaultTaxableCriteria;
-import com.domain.tax.TaxableCriteria;
-import com.domain.tax.rules.DefaultTaxApplier;
-import com.domain.tax.rules.TaxApplier;
+import com.rules.tax.DefaultTaxApplier;
+import com.rules.tax.TaxApplier;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by pankaj on 26-11-2015.
  */
-public class Product {
+public class Product implements TaxCalculableProduct {
 
     private final String productName;
-    private final double productPrice;
-    private TaxableCriteria taxableCriteria = new DefaultTaxableCriteria();
-    //Maybe Strategy
-    private TaxApplier<String> taxApplier=new DefaultTaxApplier();
+    private final BigDecimal productPrice;
+    private int productCount = 1;
+    private BigDecimal salesTax = BigDecimal.ZERO;
+    private TaxApplier<Product> taxApplier = new DefaultTaxApplier();
     private ProductType productType;
     private List<Tax> taxesApplicableOnProducts = new ArrayList<>();
+    private ProductCategory productCategory;
+    private String productDescriptionString;
 
-    public Product(String productName, double productPrice, ProductType productType) {
+    public Product(String productName, BigDecimal productPrice, ProductType productType, String productDescriptionString) {
         this.productName = productName;
         this.productPrice = productPrice;
         this.productType = productType;
-        this.taxesApplicableOnProducts=taxApplier.getApplicableTaxes(productName);
+        this.productDescriptionString = productDescriptionString;
+        this.taxesApplicableOnProducts = taxApplier.getApplicableTaxes(this);
     }
 
-    public void setTaxableCriteria(TaxableCriteria taxableCriteria) {
-        this.taxableCriteria = taxableCriteria;
+    public String getProductName() {
+        return productName;
     }
 
-    public double calculateTax() {
-        double taxValue = 0;
-        for (Tax tax : taxesApplicableOnProducts) {
-            if (taxableCriteria.isTaxable(this)) {
-                taxValue = taxValue + tax.getTaxValue().doubleValue();
-            }
+    public BigDecimal getProductPrice() {
+        return productPrice;
+    }
+
+    public BigDecimal getSalesTax() {
+        return salesTax;
+    }
+
+    @Override
+
+    public BigDecimal calculateTax() {
+        for (int i = 0; i < getProductCount(); i++) {
+            salesTax = salesTax.add(calculateTaxSingle());
         }
-        double finalTax=(productPrice * taxValue) / 100;
-        DecimalFormat decimalFormat= (DecimalFormat) DecimalFormat.getInstance();
-        decimalFormat.setRoundingMode(RoundingMode.CEILING);
-        decimalFormat.applyPattern("#.##");
-        //return Double.valueOf(decimalFormat.format(finalTax));
-        return Math.round(finalTax*20.0)/20.0;
+        return salesTax;
+    }
+
+    private BigDecimal calculateTaxSingle() {
+        if (salesTax == BigDecimal.ZERO) {
+            BigDecimal taxValue = BigDecimal.ZERO;
+            for (Tax tax : taxesApplicableOnProducts) {
+                taxValue = taxValue.add(tax.getTaxValue());
+            }
+            BigDecimal finalTax = (productPrice.multiply(taxValue));
+            double finalTaxDoublue = Math.ceil(finalTax.doubleValue() / 0.05) * 0.05;
+            this.salesTax = BigDecimal.valueOf(finalTaxDoublue).setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+        return salesTax;
     }
 
     @Override
@@ -57,18 +72,17 @@ public class Product {
 
         Product product = (Product) o;
 
-        if (Double.compare(product.productPrice, productPrice) != 0) return false;
-        return !(productName != null ? !productName.equals(product.productName) : product.productName != null);
+        if (!productName.equals(product.productName)) return false;
+        if (!productPrice.equals(product.productPrice)) return false;
+        return productType == product.productType;
 
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = productName != null ? productName.hashCode() : 0;
-        temp = Double.doubleToLongBits(productPrice);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        int result = productName.hashCode();
+        result = 31 * result + productPrice.hashCode();
+        result = 31 * result + productType.hashCode();
         return result;
     }
 
@@ -77,10 +91,36 @@ public class Product {
         return "Product{" +
                 "productName='" + productName + '\'' +
                 ", productPrice=" + productPrice +
+                ", final proce = " + productPrice.add(salesTax) +
                 '}';
     }
 
     public ProductType getProductType() {
         return productType;
+    }
+
+
+    public ProductCategory getProductCategory() {
+        return productCategory;
+    }
+
+    public void setProductCategory(ProductCategory productCategory) {
+        this.productCategory = productCategory;
+    }
+
+    public String getProductDescriptionString() {
+        return productDescriptionString;
+    }
+
+    public void setProductDescriptionString(String productDescriptionString) {
+        this.productDescriptionString = productDescriptionString;
+    }
+
+    public int getProductCount() {
+        return productCount;
+    }
+
+    public void setProductCount(int productCount) {
+        this.productCount = productCount;
     }
 }

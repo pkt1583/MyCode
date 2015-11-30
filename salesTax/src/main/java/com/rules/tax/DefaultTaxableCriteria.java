@@ -1,6 +1,7 @@
-package com.domain.tax;
+package com.rules.tax;
 
 import com.domain.product.Product;
+import com.domain.product.ProductCategory;
 import com.domain.product.ProductType;
 
 /**
@@ -10,7 +11,8 @@ public class DefaultTaxableCriteria implements TaxableCriteria<Product> {
     @Override
     public boolean isTaxable(Product product) {
         ProductType productProductType = product.getProductType();
-        if (productProductType == ProductType.BOOKS || productProductType == ProductType.FOOD || productProductType == ProductType.MEDICAL) {
+        ProductCategory productCategory = product.getProductCategory();
+        if ((productProductType == ProductType.BOOKS || productProductType == ProductType.FOOD || productProductType == ProductType.MEDICAL) && productCategory != ProductCategory.IMPORTED) {
             return false;
         }
         return true;
